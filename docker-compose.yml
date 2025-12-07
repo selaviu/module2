@@ -2,17 +2,15 @@ version: '3.8'
 
 services:
   db:
-    # Use the official PostgreSQL image.
     image: postgres:14-alpine
     
     restart: always
     
     environment:
-      POSTGRES_DB: music_db       # Database name
-      POSTGRES_USER: user         # Database user name
-      POSTGRES_PASSWORD: password # Database password
+      POSTGRES_DB: music_db       
+      POSTGRES_USER: user         
+      POSTGRES_PASSWORD: password 
       
-    # ЗМІНЕНИЙ ПОРТ: 5433 на хості -> 5432 у контейнері
     ports:
       - "5433:5432" 
       
