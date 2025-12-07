@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.25.xsd">
+
+    <changeSet id="04-12-2025-01" author="selav1u">
+        <comment>Створення таблиці 'artists'</comment>
+        <createTable tableName="artists">
+            <column name="id" type="UUID"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="name" type="VARCHAR(100)"><constraints nullable="false" unique="true"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="04-12-2025-02" author="selav1u">
+        <comment>Створення таблиці 'genres'</comment>
+        <createTable tableName="genres">
+            <column name="id" type="UUID"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="name" type="VARCHAR(50)"><constraints nullable="false" unique="true"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="04-12-2025-03-albums" author="selav1u">
+        <comment>Створення таблиці 'albums'</comment>
+        <createTable tableName="albums">
+            <column name="id" type="UUID"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="name" type="VARCHAR(100)"><constraints nullable="false"/></column>
+            <column name="artist_id" type="UUID"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="04-12-2025-04-album-fk" author="selav1u">
+        <comment>Створення зовнішнього ключа для зв'язку 'albums' до 'artists' (One-to-Many)</comment>
+        <addForeignKeyConstraint baseTableName="albums"
+                                 baseColumnNames="artist_id"
+                                 constraintName="fk_album_artist"
+                                 referencedTableName="artists"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+
+    <changeSet id="04-12-2025-05-songs-update" author="selav1u">
+        <comment>Створення таблиці 'songs' (з FK на album_id)</comment>
+        <createTable tableName="songs">
+            <column name="id" type="UUID"><constraints primaryKey="true" nullable="false"/></column>
+            <column name="title" type="VARCHAR(100)"><constraints nullable="false"/></column>
+            <column name="release_year" type="INT"><constraints nullable="false"/></column>
+            <column name="duration" type="INT"><constraints nullable="false"/></column>
+            <column name="artist_id" type="UUID"><constraints nullable="false"/></column>
+            
+            <column name="album_id" type="UUID"/> 
+        </createTable>
+    </changeSet>
+
+    <changeSet id="04-12-2025-06-song-artist-fk" author="selav1u">
+        <comment>Створення зовнішнього ключа для зв'язку 'songs' до 'artists' (One-to-Many)</comment>
+        <addForeignKeyConstraint baseTableName="songs"
+                                 baseColumnNames="artist_id"
+                                 constraintName="fk_song_artist"
+                                 referencedTableName="artists"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+    
+    <changeSet id="04-12-2025-07-song-album-fk" author="selav1u">
+        <comment>Створення зовнішнього ключа для зв'язку 'songs' до 'albums' (One-to-Many)</comment>
+        <addForeignKeyConstraint baseTableName="songs"
+                                 baseColumnNames="album_id"
+                                 constraintName="fk_song_album"
+                                 referencedTableName="albums"
+                                 referencedColumnNames="id"
+                                 onDelete="SET NULL"/> </changeSet>
+
+    <changeSet id="04-12-2025-08-song-genre-table" author="selav1u">
+        <comment>Створення проміжної таблиці 'song_genre'</comment>
+        <createTable tableName="song_genre">
+            <column name="song_id" type="UUID"><constraints nullable="false"/></column>
+            <column name="genre_id" type="UUID"><constraints nullable="false"/></column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="04-12-2025-09-song-genre-pk" author="selav1u">
+        <comment>Додавання композитного первинного ключа до 'song_genre'</comment>
+        <addPrimaryKey tableName="song_genre"
+                       columnNames="song_id, genre_id"
+                       constraintName="pk_song_genre"/>
+    </changeSet>
+
+    <changeSet id="04-12-2025-10-song-genre-fk" author="selav1u">
+        <comment>Додавання FK до 'songs' та 'genres'</comment>
+        <addForeignKeyConstraint baseTableName="song_genre"
+                                 baseColumnNames="song_id"
+                                 constraintName="fk_sg_song"
+                                 referencedTableName="songs"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="song_genre"
+                                 baseColumnNames="genre_id"
+                                 constraintName="fk_sg_genre"
+                                 referencedTableName="genres"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>
