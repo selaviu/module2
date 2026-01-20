@@ -46,6 +46,7 @@ public class SongController {
 
     @GetMapping("/{id}")
     public SongInfoDto getSong(@PathVariable UUID id){
+        System.out.println("Getting song with id: " + id);
         return songService.getSongDetailedInfo(id);
     }
 

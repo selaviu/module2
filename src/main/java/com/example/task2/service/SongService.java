@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.task2.dto.ArtistInfoDto;
+import com.example.task2.dto.EmailDto;
 import com.example.task2.dto.FileUploadResultDto;
 import com.example.task2.dto.GenreInfoDto;
 import com.example.task2.dto.SaveSongDto;
@@ -46,6 +48,7 @@ public class SongService {
     private final ArtistService artistService;
     private final AlbumService albumService;
     private final Gson gson;
+    private final MessageSenderService messageSenderService;
 
     @Transactional
     public UUID saveSong(SaveSongDto saveSongDto){
@@ -57,7 +60,25 @@ public class SongService {
         .genres(genreService.findAllById(saveSongDto.getGenresId()))
         .build();
 
-        return songRepository.save(song).getId();
+        
+        Song savedSong = songRepository.save(song);
+        String content = String.format(
+            "Системне сповіщення:\n\n" +
+            "У бібліотеку додано нову пісню.\n" +
+            "Назва: %s\n" +
+            "Виконавець ID: %s\n" +
+            "Рік релізу: %d\n" +
+            "Тривалість: %s\n\n" +
+            "Дата створення: %s",
+            savedSong.getTitle(),
+            savedSong.getArtist().getName(),
+            saveSongDto.getReleaseYear(),
+            saveSongDto.getDuration(),
+            LocalDateTime.now()
+        );
+        messageSenderService.sendEmailTask(new EmailDto("admin@mail.com", 
+            "New song with name " + saveSongDto.getTitle() + " added.", content));
+        return savedSong.getId();
     }
 
     public Song findById(UUID id){
