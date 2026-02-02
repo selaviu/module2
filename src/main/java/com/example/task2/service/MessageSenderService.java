@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.task2.dto.EmailDto;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service

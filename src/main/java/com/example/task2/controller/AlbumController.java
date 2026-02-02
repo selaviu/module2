@@ -1,5 +1,6 @@
 package com.example.task2.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,11 @@ import lombok.RequiredArgsConstructor;
 public class AlbumController {
 
     private final AlbumService albumService;
+
+    @GetMapping
+    public List<AlbumInfoDto> getAlbums(){
+        return albumService.getAllAlbums();
+    }
 
     @GetMapping("/{id}")
     public AlbumInfoDto getAlbumById(@PathVariable UUID id){

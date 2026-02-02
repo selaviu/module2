@@ -10,4 +10,5 @@ public class SongFilter {
     private final String albumName;
     private final String artistName;
     private final Integer releasedYear;
+    private final String genres;
 }

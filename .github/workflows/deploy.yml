@@ -1,0 +1,41 @@
+name: Deploy Songs Service to GKE
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - id: "auth"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCP_SA_KEY }}"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          install_components: "gke-gcloud-auth-plugin"
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker europe-central2-docker.pkg.dev
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t europe-central2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/microservices-repo/music-service:${{ github.sha }} .
+          docker push europe-central2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/microservices-repo/music-service:${{ github.sha }}
+
+      - name: Deploy to GKE
+        run: |
+          gcloud container clusters get-credentials music-cluster --region europe-central2 --project ${{ secrets.GCP_PROJECT_ID }}
+
+          # Оновлюємо саме songs-service-deployment
+          kubectl set image deployment/songs-service-deployment songs-service-container=europe-central2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/microservices-repo/music-service:${{ github.sha }}
+
+          # Перевірка статусу
+          kubectl rollout status deployment/songs-service-deployment

@@ -137,8 +137,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     void createArtist_Success() throws Exception {
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title("New Song Title")
-            .albumId(createdAlbumId)
-            .artistId(createdArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(createdArtistId)
             .duration(200)
             .releaseYear(2023)
             .genresId(List.of(createdGenreId))
@@ -159,8 +159,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
         UUID nonexistentGenreId = UUID.randomUUID();
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title("New Song Title")
-            .albumId(createdAlbumId)
-            .artistId(createdArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(createdArtistId)
             .duration(200)
             .releaseYear(2023)
             .genresId(List.of(nonexistentGenreId))
@@ -179,8 +179,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     void createArtist_Failed_FutureYear() throws Exception {
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title("New Song Title")
-            .albumId(createdAlbumId)
-            .artistId(createdArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(createdArtistId)
             .duration(200)
             .releaseYear(2030)
             .genresId(List.of(createdGenreId))
@@ -226,8 +226,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
         String newTitle = "Updated Song Title";
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title(newTitle)
-            .albumId(createdAlbumId)
-            .artistId(createdArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(createdArtistId)
             .duration(200)
             .releaseYear(2023)
             .genresId(List.of(createdGenreId))
@@ -250,8 +250,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
                 + "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title(newTitle)
-            .albumId(createdAlbumId)
-            .artistId(createdArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(createdArtistId)
             .duration(200)
             .releaseYear(2023)
             .genresId(List.of(createdGenreId))
@@ -272,8 +272,8 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
         UUID nonExistingArtistId = UUID.randomUUID();
         SaveSongDto saveSongDto = SaveSongDto.builder()
             .title("newTitle")
-            .albumId(createdAlbumId)
-            .artistId(nonExistingArtistId)
+            // .albumId(createdAlbumId)
+            // .artistId(nonExistingArtistId)
             .duration(200)
             .releaseYear(2023)
             .genresId(List.of(createdGenreId))
@@ -314,7 +314,7 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     @DisplayName("POST /api/song/_list - Successful retrieval of all records")
     void getSongs_Success() throws Exception {
 
-        SongFilter songFilter = new SongFilter("", "", null);
+        SongFilter songFilter = new SongFilter("", "", null, "");
         mockMvc.perform(post(API_PATH + "/_list") 
             
             .param("page", "0") 
@@ -331,7 +331,7 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     @DisplayName("POST /api/song/_list - Filter by release year (2015)") 
     void getSongs_Success_filterByReleasedYear() throws Exception {
 
-        SongFilter songFilter = new SongFilter("", "", 2015);
+        SongFilter songFilter = new SongFilter("", "", 2015, "");
         mockMvc.perform(post(API_PATH + "/_list")
             .param("page", "0") 
             .param("size", "10") 
@@ -347,7 +347,7 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     @DisplayName("POST /api/song/_list - Filter by album (Album 1)") 
     void getSongs_Success_filterByAlbum() throws Exception {
 
-        SongFilter songFilter = new SongFilter("album 1", "", null);
+        SongFilter songFilter = new SongFilter("album 1", "", null, "");
         mockMvc.perform(post(API_PATH + "/_list") 
             .param("page", "0") 
             .param("size", "10") 
@@ -363,7 +363,7 @@ public class SongControllerIntegrationTest extends AbstractIntegrationTest{
     @DisplayName("POST /api/song/_report - Successful CSV report generation") 
     void generateReport_Success() throws Exception {
         
-        SongFilter filter = new SongFilter(null, null, 2015);
+        SongFilter filter = new SongFilter(null, null, 2015, "");
         
         MvcResult result = mockMvc.perform(post(API_PATH + "/_report")
                 .contentType(MediaType.APPLICATION_JSON)

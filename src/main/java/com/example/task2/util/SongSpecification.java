@@ -38,4 +38,16 @@ public class SongSpecification {
             return builder.equal(root.get("releaseYear"), year);
         };
     }
+
+    public static Specification<Song> isGenre(String genreName){
+        return(root, query, builder) -> {
+            if(genreName == null || genreName.trim().isEmpty()){
+                return null;
+            }
+
+            String pattern = "%" + genreName.toLowerCase() + "%";
+
+            return builder.like(builder.lower(root.get("genres").get("name")), pattern);
+        };
+    }
 }

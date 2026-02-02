@@ -1,5 +1,6 @@
 package com.example.task2.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
@@ -25,6 +26,11 @@ public class AlbumService {
     public Album findById(UUID albumId) {
         return albumRepository.findById(albumId)
                 .orElseThrow(() -> new ResourceNotFoundException("Album", albumId));
+    }
+
+    public Album findByName(String albumName) {
+        return albumRepository.findByName(albumName)
+                .orElseThrow(() -> new ResourceNotFoundException("Album", albumName));
     }
 
     public AlbumInfoDto getAlbumDetails(UUID id) {
@@ -59,6 +65,13 @@ public class AlbumService {
     public void delete(UUID id) {
         Album album = findById(id);
         albumRepository.delete(album);
+    }
+
+    public List<AlbumInfoDto> getAllAlbums() {
+        List<Album> albums = albumRepository.findAll();
+        return albums.stream()
+                .map(this::convertToDetails)
+                .toList();
     }
 
     public AlbumInfoDto convertToDetails(Album album) {

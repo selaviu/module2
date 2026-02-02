@@ -1,5 +1,6 @@
 package com.example.task2.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,6 @@ import com.example.task2.model.Album;
 public interface AlbumRepository extends JpaRepository<Album, UUID> {
 
     boolean existsByNameAndArtistId(String name, UUID artistId);
+    Optional<Album> findByName(String name);
 
 }

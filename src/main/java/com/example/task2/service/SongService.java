@@ -108,8 +108,9 @@ public class SongService {
         Specification<Song> isAlbum = SongSpecification.isAlbum(songFilter.getAlbumName());
         Specification<Song> releasedInYear = SongSpecification.releasedInYear(songFilter.getReleasedYear());
         Specification<Song> isArtist = SongSpecification.isArist(songFilter.getArtistName());
+        Specification<Song> hasGenre = SongSpecification.isGenre(songFilter.getGenres());
 
-        Specification<Song> finalSpec = isAlbum.and(releasedInYear).and(isArtist);
+        Specification<Song> finalSpec = isAlbum.and(releasedInYear).and(isArtist).and(hasGenre);
 
         Page<Song> songs = songRepository.findAll(finalSpec, pageable);
 

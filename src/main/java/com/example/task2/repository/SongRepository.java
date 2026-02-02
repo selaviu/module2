@@ -10,5 +10,4 @@ import com.example.task2.model.Song;
 
 @Repository
 public interface SongRepository extends JpaRepository<Song, UUID>, JpaSpecificationExecutor<Song> {
-
 }

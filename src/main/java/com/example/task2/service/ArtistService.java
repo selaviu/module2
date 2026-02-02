@@ -27,6 +27,7 @@ public class ArtistService {
             .orElseThrow(() -> new ResourceNotFoundException("Artist", id));
     }
 
+
     @Transactional
     public UUID save(SaveArtistDto saveArtistDto){
 
@@ -69,6 +70,7 @@ public class ArtistService {
 
     private ArtistInfoDto convertToDetails(Artist artist){
         ArtistInfoDto artistInfoDto = ArtistInfoDto.builder()
+        .id(artist.getId())
         .name(artist.getName())
         .build();
 
